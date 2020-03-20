@@ -18,6 +18,7 @@ const ContactForm = () => {
               name='firstName'
               placeholder='bill'
               ref={register({ required: true, maxLength: 3 })}
+              data-testid='first-required'
             />
           </label>
           {errors.firstName && (
