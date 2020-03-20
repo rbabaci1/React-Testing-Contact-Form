@@ -9,8 +9,8 @@ const ContactForm = () => {
   const onSubmit = data => setData(data);
 
   return (
-    <div data-testid='form' className='App'>
-      <form onSubmit={handleSubmit(onSubmit)}>
+    <div className='App'>
+      <form onSubmit={handleSubmit(onSubmit)} data-testid='contact form'>
         <div>
           <label htmlFor='firstName'>First Name*</label>
           <input
