@@ -2,6 +2,7 @@ import React from 'react';
 import { render, fireEvent } from '@testing-library/react';
 
 import ContactForm from './ContactForm';
+import { act } from 'react-dom/test-utils';
 
 test('renders all input fields', () => {
   const { getByLabelText } = render(<ContactForm />);
@@ -12,7 +13,7 @@ test('renders all input fields', () => {
   getByLabelText(/message/i);
 });
 
-test('form submit renders a JSON object', () => {
+test('form inputs change when a user types', () => {
   const { getByTestId } = render(<ContactForm />);
 
   const firstName = getByTestId('first-name-input');
@@ -20,13 +21,43 @@ test('form submit renders a JSON object', () => {
   const email = getByTestId('email-input');
   const message = getByTestId('message-input');
 
-  fireEvent.change(firstName, { target: { value: 'test first name' } });
-  fireEvent.change(lastName, { target: { value: 'test last name' } });
-  fireEvent.change(email, { target: { value: 'test email' } });
-  fireEvent.change(message, { target: { value: 'test message' } });
+  fireEvent.change(firstName, { target: { value: 'aaa' } });
+  fireEvent.change(lastName, { target: { value: 'babaci' } });
+  fireEvent.change(email, { target: { value: 'rbabaci1@gmail.com' } });
+  fireEvent.change(message, { target: { value: 'hello' } });
 
-  expect(firstName.value).toBe('test first name');
-  expect(lastName.value).toBe('test last name');
-  expect(email.value).toBe('test email');
-  expect(message.value).toBe('test message');
+  expect(firstName.value).toBe('aaa');
+  expect(lastName.value).toBe('babaci');
+  expect(email.value).toBe('rbabaci1@gmail.com');
+  expect(message.value).toBe('hello');
+
+  fireEvent.click(getByTestId('submit'));
+  const output = getByTestId('output');
+
+  expect(output).toBeInTheDocument();
 });
+
+// test('submit works', async () => {
+//   const { getByTestId } = render(<ContactForm />);
+
+//   act(() => {
+//     fireEvent(
+//       getByTestId('submit'),
+//       new MouseEvent('click', {
+//         bubbles: true,
+//         cancelable: true
+//       })
+//     );
+//   });
+
+//   expect(getByTestId('test')).
+// });
+// test('User should be able to enter a first name longer than 3 chars', () => {
+//   const { getByTestId } = render(<ContactForm />);
+
+//   const firstName = getByTestId('first-name-input');
+
+//   act(() => fireEvent.change(firstName, {target: {value: 'aaaa'}}))
+
+//   expect()
+// });

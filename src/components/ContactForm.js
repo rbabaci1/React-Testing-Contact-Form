@@ -23,7 +23,9 @@ const ContactForm = () => {
           </label>
 
           {errors.firstName && (
-            <p>Looks like there was an error: {errors.firstName.type}</p>
+            <p data-testid='error'>
+              Looks like there was an error: {errors.firstName.type}
+            </p>
           )}
         </div>
 
@@ -66,12 +68,17 @@ const ContactForm = () => {
             />
           </label>
         </div>
+
         {data && (
-          <pre style={{ textAlign: 'left', color: 'white' }}>
+          <pre
+            style={{ textAlign: 'left', color: 'white' }}
+            data-testid='output'
+          >
             {JSON.stringify(data, null, 2)}
           </pre>
         )}
-        <input type='submit' />
+
+        <input type='submit' data-testid='submit' />
       </form>
     </div>
   );
