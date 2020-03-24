@@ -45,6 +45,7 @@ test('On form submission, renders the JSON inputted data', async () => {
   expect(submitButton.type).toBe('submit');
 
   fireEvent.click(submitButton);
+
   await wait(() =>
     expect(getByTestId('preformatted-text')).toBeInTheDocument()
   );
@@ -53,7 +54,7 @@ test('On form submission, renders the JSON inputted data', async () => {
 });
 
 test('inputs render error messages onBlur', async () => {
-  const { getByTestId, getAllByTestId } = render(<ContactForm />);
+  const { getByTestId } = render(<ContactForm />);
 
   const firstName = getByTestId('first-name-input');
   const lastName = getByTestId('last-name-input');
@@ -64,11 +65,37 @@ test('inputs render error messages onBlur', async () => {
   fireEvent.blur(email);
 
   await wait(() => {
-    const [firstName, lastName, email] = getAllByTestId('error');
+    expect(getByTestId('firstName-error')).toBeInTheDocument();
+    expect(getByTestId('lastName-error')).toBeInTheDocument();
+    expect(getByTestId('email-error')).toBeInTheDocument();
+  });
 
-    expect(firstName).toBeInTheDocument();
-    expect(lastName).toBeInTheDocument();
-    expect(email).toBeInTheDocument();
+  cleanup();
+});
+
+test('User should be able to enter any firstName length', async () => {
+  const { getByTestId } = render(<ContactForm />);
+  const myFirstName = 'rabah ';
+
+  const firstName = getByTestId('first-name-input');
+  const lastName = getByTestId('last-name-input');
+  const email = getByTestId('email-input');
+  const submitButton = getByTestId('submit');
+
+  firstName.value = myFirstName;
+  lastName.value = 'o';
+  email.value = 'o';
+
+  expect(firstName.value).toBe('rabah ');
+
+  fireEvent.click(submitButton);
+
+  await wait(() => {
+    const { firstName } = JSON.parse(
+      getByTestId('preformatted-text').innerHTML
+    );
+
+    expect(firstName).toMatch(myFirstName);
   });
 
   cleanup();

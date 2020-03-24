@@ -17,13 +17,13 @@ const ContactForm = () => {
             <input
               name='firstName'
               placeholder='bill'
-              ref={register({ required: true, maxLength: 3 })}
+              ref={register({ required: true })}
               data-testid='first-name-input'
             />
           </label>
 
           {errors.firstName && (
-            <p data-testid='error'>
+            <p data-testid='firstName-error'>
               Looks like there was an error: {errors.firstName.type}
             </p>
           )}
@@ -40,7 +40,7 @@ const ContactForm = () => {
             />
           </label>
           {errors.lastName && (
-            <p data-testid='error'>
+            <p data-testid='lastName-error'>
               Looks like there was an error: {errors.lastName.type}
             </p>
           )}
@@ -56,7 +56,7 @@ const ContactForm = () => {
             />
           </label>
           {errors.email && (
-            <p data-testid='error'>
+            <p data-testid='email-error'>
               Looks like there was an error: {errors.email.type}
             </p>
           )}
