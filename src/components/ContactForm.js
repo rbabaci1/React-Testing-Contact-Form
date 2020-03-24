@@ -40,7 +40,9 @@ const ContactForm = () => {
             />
           </label>
           {errors.lastName && (
-            <p>Looks like there was an error: {errors.lastName.type}</p>
+            <p data-testid='error'>
+              Looks like there was an error: {errors.lastName.type}
+            </p>
           )}
         </div>
 
@@ -54,7 +56,9 @@ const ContactForm = () => {
             />
           </label>
           {errors.email && (
-            <p>Looks like there was an error: {errors.email.type}</p>
+            <p data-testid='error'>
+              Looks like there was an error: {errors.email.type}
+            </p>
           )}
         </div>
 
@@ -72,7 +76,7 @@ const ContactForm = () => {
         {data && (
           <pre
             style={{ textAlign: 'left', color: 'white' }}
-            data-testid='output'
+            data-testid='preformatted-text'
           >
             {JSON.stringify(data, null, 2)}
           </pre>

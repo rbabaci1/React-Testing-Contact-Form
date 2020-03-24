@@ -1,63 +1,75 @@
 import React from 'react';
-import { render, fireEvent } from '@testing-library/react';
-
+import { render, fireEvent, wait, cleanup } from '@testing-library/react';
+// import { act } from 'react-dom/test-utils';
 import ContactForm from './ContactForm';
-import { act } from 'react-dom/test-utils';
 
 test('renders all input fields', () => {
   const { getByLabelText } = render(<ContactForm />);
-
   getByLabelText(/first name\*/i);
   getByLabelText(/last name\*/i);
   getByLabelText(/email\*/i);
   getByLabelText(/message/i);
 });
 
-test('form inputs change when a user types', () => {
+test('On form submission, renders the JSON inputted data', async () => {
   const { getByTestId } = render(<ContactForm />);
 
   const firstName = getByTestId('first-name-input');
   const lastName = getByTestId('last-name-input');
   const email = getByTestId('email-input');
   const message = getByTestId('message-input');
+  const submitButton = getByTestId('submit');
 
-  fireEvent.change(firstName, { target: { value: 'aaa' } });
-  fireEvent.change(lastName, { target: { value: 'babaci' } });
-  fireEvent.change(email, { target: { value: 'rbabaci1@gmail.com' } });
-  fireEvent.change(message, { target: { value: 'hello' } });
+  fireEvent.change(firstName, {
+    target: {
+      value: 'aaa'
+    }
+  });
+  fireEvent.change(lastName, {
+    target: {
+      value: 'babaci'
+    }
+  });
+  fireEvent.change(email, {
+    target: {
+      value: 'rbabaci1@gmail.com'
+    }
+  });
+  //! The same as firing the change event
+  message.value = 'hello';
 
   expect(firstName.value).toBe('aaa');
   expect(lastName.value).toBe('babaci');
   expect(email.value).toBe('rbabaci1@gmail.com');
   expect(message.value).toBe('hello');
+  expect(submitButton.type).toBe('submit');
 
-  fireEvent.click(getByTestId('submit'));
-  const output = getByTestId('output');
+  fireEvent.click(submitButton);
+  await wait(() =>
+    expect(getByTestId('preformatted-text')).toBeInTheDocument()
+  );
 
-  expect(output).toBeInTheDocument();
+  cleanup();
 });
 
-// test('submit works', async () => {
-//   const { getByTestId } = render(<ContactForm />);
+test('inputs render error messages onBlur', async () => {
+  const { getByTestId, getAllByTestId } = render(<ContactForm />);
 
-//   act(() => {
-//     fireEvent(
-//       getByTestId('submit'),
-//       new MouseEvent('click', {
-//         bubbles: true,
-//         cancelable: true
-//       })
-//     );
-//   });
+  const firstName = getByTestId('first-name-input');
+  const lastName = getByTestId('last-name-input');
+  const email = getByTestId('email-input');
 
-//   expect(getByTestId('test')).
-// });
-// test('User should be able to enter a first name longer than 3 chars', () => {
-//   const { getByTestId } = render(<ContactForm />);
+  fireEvent.blur(firstName);
+  fireEvent.blur(lastName);
+  fireEvent.blur(email);
 
-//   const firstName = getByTestId('first-name-input');
+  await wait(() => {
+    const [firstName, lastName, email] = getAllByTestId('error');
 
-//   act(() => fireEvent.change(firstName, {target: {value: 'aaaa'}}))
+    expect(firstName).toBeInTheDocument();
+    expect(lastName).toBeInTheDocument();
+    expect(email).toBeInTheDocument();
+  });
 
-//   expect()
-// });
+  cleanup();
+});
